@@ -91,5 +91,5 @@ jobs:
           else:
               lines.append('- Relatório indisponível: conferir etapas anteriores.')
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
-              f.write('\\n'.join(lines) + '\\n')
+              f.write(chr(10).join(lines) + chr(10))
           PY
