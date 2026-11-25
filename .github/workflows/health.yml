@@ -1,0 +1,17 @@
+name: Auditoria de saúde das coletas
+on:
+  schedule:
+    - cron: '43 14 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verificar última coleta concluída
+        run: python -m scripts.health_check

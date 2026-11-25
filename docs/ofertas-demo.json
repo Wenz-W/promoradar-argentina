@@ -1,0 +1,219 @@
+{
+  "generated_at": "2026-11-25T03:06:30.584733+00:00",
+  "mode": "demo",
+  "max_age_hours": 30.0,
+  "max_offer_days": 7.0,
+  "count": 2,
+  "offers": [
+    {
+      "offer_id": "5b078300fe7e9a8ebac6",
+      "listing_id": "MLA-DEMO-001",
+      "title": "Cafetera demostración",
+      "store": "Tienda ficticia",
+      "source": "demo_synthetic",
+      "category": "Otros",
+      "price_ars": 90000.0,
+      "historical_reference_ars": 129000.0,
+      "drop_pct": 30.23,
+      "url": null,
+      "image_url": null,
+      "detected_at": "2026-11-20T03:06:30.578732+00:00",
+      "last_verified_at": "2026-11-25T03:06:30.578732+00:00",
+      "approved_at": "2026-11-20T03:06:40.578732+00:00",
+      "status": "active",
+      "is_demo": true,
+      "price_scope": "public_listing_price_no_freight",
+      "history": [
+        {
+          "date": "2026-11-05",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-06",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-07",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-08",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-09",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-10",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-11",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-12",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-13",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-14",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-15",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-16",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-17",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-18",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-19",
+          "price_ars": 129000.0
+        },
+        {
+          "date": "2026-11-20",
+          "price_ars": 90000.0
+        },
+        {
+          "date": "2026-11-21",
+          "price_ars": 90000.0
+        },
+        {
+          "date": "2026-11-22",
+          "price_ars": 90000.0
+        },
+        {
+          "date": "2026-11-23",
+          "price_ars": 90000.0
+        },
+        {
+          "date": "2026-11-24",
+          "price_ars": 90000.0
+        },
+        {
+          "date": "2026-11-25",
+          "price_ars": 90000.0
+        }
+      ]
+    },
+    {
+      "offer_id": "c0952d1c6d963976d323",
+      "listing_id": "SHP-DEMO-002",
+      "title": "Auriculares demostración",
+      "store": "Tienda ficticia",
+      "source": "demo_synthetic",
+      "category": "Otros",
+      "price_ars": 49000.0,
+      "historical_reference_ars": 65000.0,
+      "drop_pct": 24.62,
+      "url": null,
+      "image_url": null,
+      "detected_at": "2026-11-23T03:06:30.578732+00:00",
+      "last_verified_at": "2026-11-25T03:06:30.578732+00:00",
+      "approved_at": "2026-11-23T03:06:40.578732+00:00",
+      "status": "active",
+      "is_demo": true,
+      "price_scope": "public_listing_price_no_freight",
+      "history": [
+        {
+          "date": "2026-11-05",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-06",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-07",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-08",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-09",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-10",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-11",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-12",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-13",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-14",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-15",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-16",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-17",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-18",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-19",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-20",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-21",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-22",
+          "price_ars": 65000.0
+        },
+        {
+          "date": "2026-11-23",
+          "price_ars": 49000.0
+        },
+        {
+          "date": "2026-11-24",
+          "price_ars": 49000.0
+        },
+        {
+          "date": "2026-11-25",
+          "price_ars": 49000.0
+        }
+      ]
+    }
+  ]
+}

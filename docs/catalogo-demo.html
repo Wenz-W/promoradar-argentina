@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explorá ofertas verificadas en tiendas y marketplaces de Argentina. Compará precios, buscá productos y consultá el historial.">
+<title>PromoRadar Argentina — DEMOSTRACIÓN</title>
+<link rel="stylesheet" href="./catalogo.css">
+</head>
+<body data-mode="demo" class="is-demo">
+<header class="topbar"><div class="shell"><a href="./catalogo.html" class="brand"><span class="brandmark">PR</span>PromoRadar <span style="color:#7790b2">AR</span></a><nav><a href="#ofertas">Ofertas</a><a href="#informacion">Cómo funciona</a></nav></div></header>
+<section class="hero"><div class="shell">
+<p class="eyebrow">Radar de precios · Argentina</p>
+<h1>Buenas oportunidades,<br>todo en un solo lugar.</h1>
+<p class="lead">Buscá productos, compará precios observados y descubrí ofertas que pasaron por una revisión. Información clara para comprar mejor.</p>
+<div class="heroline"><div class="hero-stat"><strong id="stat-offers">—</strong><span>ofertas vigentes</span></div><div class="hero-stat"><strong id="stat-stores">—</strong><span>tiendas con ofertas</span></div></div>
+<div class="democallout" role="status"><strong>DEMOSTRACIÓN:</strong> productos, precios y descuentos simulados para probar la interfaz. No son ofertas comerciales reales.</div>
+</div></section>
+<main class="shell" id="ofertas"><div class="section-top"><div><h2>Explorá las ofertas</h2><p id="updated-at">Buscando datos actualizados…</p></div></div>
+<div class="toolbar"><div class="filters">
+<div class="control search"><label for="q">¿Qué estás buscando?</label><input id="q" type="search" placeholder="Ej.: auriculares, cafetera, notebook" autocomplete="off"></div>
+<div class="control"><label for="store">Tienda</label><select id="store"><option value="">Todas</option></select></div>
+<div class="control"><label for="category">Categoría</label><select id="category"><option value="">Todas</option></select></div>
+<div class="control"><label for="min">Precio mínimo ($)</label><input id="min" type="number" inputmode="numeric" min="0" placeholder="Sin mínimo"></div>
+<div class="control"><label for="max">Precio máximo ($)</label><input id="max" type="number" inputmode="numeric" min="0" placeholder="Sin máximo"></div>
+</div><div class="toolbar-footer"><span id="result-count" aria-live="polite">Cargando ofertas…</span><div style="display:flex;gap:14px;align-items:center"><label for="sort">Ordenar</label><select id="sort" aria-label="Ordenar ofertas" style="background:#fff;border:1px solid #dde5f0;padding:7px;border-radius:8px"><option value="discount">Mayor descuento</option><option value="recent">Más recientes</option><option value="price-low">Menor precio</option><option value="price-high">Mayor precio</option></select><button class="reset" id="reset" type="button">Limpiar</button></div></div></div>
+<div id="listing" class="listing" aria-live="polite"><div class="loading"><h3>Cargando catálogo…</h3><p>Estamos preparando las ofertas verificadas.</p></div></div>
+<div id="informacion" class="disclosure">Los precios corresponden a observaciones de fuentes indicadas. Las variaciones se calculan frente al historial registrado, no frente a precios tachados. Disponibilidad, condiciones y costos de envío pueden cambiar; verificá siempre el importe final en la tienda. Las promociones dejan de mostrarse si caducan o si no pueden verificarse recientemente.</div>
+</main>
+<footer><div class="shell foot"><span>© PromoRadar Argentina · Proyecto académico</span><span>Información orientativa · Pesos argentinos (ARS)</span></div></footer>
+<script src="./catalogo.js" defer></script>
+</body></html>

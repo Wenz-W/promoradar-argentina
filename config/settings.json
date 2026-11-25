@@ -1,0 +1,52 @@
+{
+  "project": "PromoRadar Argentina",
+  "timezone": "America/Argentina/Buenos_Aires",
+  "drop_threshold_pct": 15,
+  "min_historical_days": 7,
+  "historical_window_days": 30,
+  "min_historical_samples": 7,
+  "repost_cooldown_hours": 48,
+  "extra_drop_for_repost_pct": 5,
+  "mercadolibre": {
+    "enabled": false,
+    "site_id": "MLA",
+    "queries": [
+      "auriculares bluetooth",
+      "cafetera",
+      "herramientas",
+      "licuadora",
+      "mochila"
+    ],
+    "results_per_query": 10,
+    "max_requests_per_run": 5
+  },
+  "experimental_connectors": {
+    "shopee": "not_configured",
+    "temu": "not_configured",
+    "shein": "not_configured"
+  },
+  "sepa": {
+    "enabled": true,
+    "region": "CENTRO",
+    "shards": [
+      "69",
+      "20"
+    ],
+    "max_items_per_shard": 30,
+    "max_staleness_days": 3
+  },
+  "catalog": {
+    "max_verification_age_hours": 30,
+    "max_offer_age_days": 7,
+    "requires_review": true,
+    "publish_sources": [
+      "mercadolibre",
+      "shopee",
+      "temu",
+      "shein",
+      "fravega",
+      "carrefour"
+    ]
+  },
+  "planned_duration_months": 6
+}
