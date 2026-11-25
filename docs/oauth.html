@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <title>PromoRadar — Autorizar Mercado Libre</title>
+  <style>
+    :root {font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#142338;background:#f4f7fb}
+    *{box-sizing:border-box}body{margin:0}.wrap{max-width:750px;margin:40px auto;padding:0 20px 60px}
+    h1{font-size:clamp(26px,4vw,38px);letter-spacing:-1px;line-height:1.12;margin:12px 0}h2{font-size:18px;margin:0 0 10px}
+    p,li{line-height:1.65;color:#526178}.muted{color:#65788f;font-size:13px}.eyebrow{font-weight:750;font-size:12px;color:#1367c6;letter-spacing:.1em}
+    .card{padding:25px;border:1px solid #dce5ef;background:white;border-radius:15px;margin:20px 0;box-shadow:0 5px 25px #14233806}
+    label{font-weight:650;font-size:14px;display:block;margin:14px 0 7px}input[type=text]{width:100%;border:1px solid #cbd6e4;padding:13px;border-radius:9px;font:inherit;color:#192b43}
+    input[readonly]{background:#f5f8fb;font-family:ui-monospace,monospace;font-size:12px}
+    button{border:0;border-radius:9px;padding:12px 15px;background:#146fdb;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+    button.secondary{background:#e8f2ff;color:#1357a1}button:disabled{opacity:.5;cursor:not-allowed}
+    .line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.line input{flex:1;min-width:180px}.line input[type=checkbox]{min-width:0;flex:0}
+    code{background:#eef3fa;padding:2px 5px;border-radius:5px;overflow-wrap:anywhere}.msg{padding:12px;border-radius:9px;background:#eaf5ee;color:#1d603e;font-size:13px;margin-top:12px}.warn{background:#fff4e2;color:#7b500d}
+    .hidden{display:none}a{color:#105eaf}.steps{padding-left:19px;margin:12px 0}
+    @media(max-width:500px){.wrap{margin-top:20px}.card{padding:18px}}
+  </style>
+</head>
+<body><main class="wrap">
+  <div class="eyebrow">PROMORADAR ARGENTINA · CONFIGURAÇÃO SEGURA</div>
+  <h1>Conectar Mercado Libre</h1>
+  <p>Esta página auxilia na autorização de uma aplicação própria. Não envia credenciais para servidores do PromoRadar. A troca do código por tokens acontece no GitHub Actions.</p>
+  <div class="card">
+    <h2>1. Configure o aplicativo e o GitHub</h2>
+    <p>Cadastre este endereço HTTPS como <strong>Redirect URI</strong> no Mercado Libre DevCenter, exatamente como aparece:</p>
+    <div class="line"><input id="redirect" type="text" readonly value="https://wenz-w.github.io/promoradar-argentina/oauth.html"><button class="secondary" data-copy="redirect" type="button">Copiar</button></div>
+    <p>Antes de autorizar, crie no GitHub Actions Secrets: <code>MELI_CLIENT_ID</code>, <code>MELI_CLIENT_SECRET</code> e <code>DATA_FERNET_KEY</code>. O App ID não é secreto; o Client Secret e a chave são.</p>
+    <label for="fernet">Chave de criptografia do cofre (gerada somente no navegador)</label>
+    <div class="line"><input id="fernet" type="text" readonly placeholder="Clique em Gerar chave"><button class="secondary" id="generate-key" type="button">Gerar chave</button><button class="secondary" data-copy="fernet" type="button">Copiar</button></div>
+    <div class="msg warn">Guarde a chave exclusivamente no GitHub Secret <code>DATA_FERNET_KEY</code>. Se a perder, não será possível abrir o cofre criptografado. Esta página não a salva.</div>
+  </div>
+  <div class="card" id="start">
+    <h2>2. Autorize a sua conta</h2>
+    <label for="client-id">APP ID da aplicação (não é o Client Secret)</label>
+    <input id="client-id" type="text" inputmode="numeric" placeholder="APP ID informado pelo DevCenter" autocomplete="off">
+    <label class="line" style="font-weight:400"><input type="checkbox" id="pkce"> Minha aplicação tem PKCE habilitado no DevCenter</label>
+    <p class="muted">Se PKCE estiver habilitado na aplicação, marque esta opção. Será gerado um <code>code_verifier</code>, que deverá ser guardado no GitHub Secret <code>MELI_CODE_VERIFIER</code>.</p>
+    <button id="authorize" type="button">Autorizar no Mercado Libre</button>
+    <div id="start-msg" class="msg warn hidden" role="status"></div>
+  </div>
+  <div class="card hidden" id="return">
+    <h2>3. Código retornado pelo Mercado Libre</h2>
+    <p id="auth-status"></p>
+    <div id="code-fields" class="hidden">
+      <label for="authcode">Authorization code — crie/atualize o GitHub Secret <code>MELI_AUTH_CODE</code></label>
+      <div class="line"><input id="authcode" type="text" readonly><button class="secondary" data-copy="authcode" type="button">Copiar código</button></div>
+      <div id="verifier-section" class="hidden">
+        <label for="verifier">PKCE code_verifier — crie/atualize o Secret <code>MELI_CODE_VERIFIER</code></label>
+        <div class="line"><input id="verifier" type="text" readonly><button class="secondary" data-copy="verifier" type="button">Copiar verifier</button></div>
+      </div>
+      <p>Depois de configurar os Secrets, execute <a href="https://github.com/Wenz-W/promoradar-argentina/actions/workflows/conectar-meli.yml">Actions → Conectar Mercado Libre (OAuth seguro) → Run workflow</a> na branch <code>main</code>.</p>
+      <div class="msg warn">O código de autorização é temporário e de uso único. Não o compartilhe em chats, issues ou commits. Apague os Secrets temporários <code>MELI_AUTH_CODE</code> e <code>MELI_CODE_VERIFIER</code> depois do sucesso.</div>
+    </div>
+  </div>
+  <p class="muted">Fonte: <a href="https://developers.mercadolibre.com.ar/es_ar/autenticacion-y-autorizacion/" rel="noreferrer">Autenticación y Autorización — Mercado Libre</a>. O acesso à API de pesquisa depende das permissões concedidas pelo Mercado Libre.</p>
+</main>
+<script>
+(() => {
+'use strict';
+const CALLBACK = 'https://wenz-w.github.io/promoradar-argentina/oauth.html';
+const $ = id => document.getElementById(id);
+const base64url = bytes => btoa(String.fromCharCode(...bytes)).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
+const random = n => {const a=new Uint8Array(n); crypto.getRandomValues(a); return base64url(a);};
+const message = text => { $('start-msg').textContent=text; $('start-msg').classList.remove('hidden'); };
+$('generate-key').addEventListener('click', () => { $('fernet').value = random(32); });
+document.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', async () => {
+  const input = $(btn.dataset.copy);
+  if(!input.value) return;
+  try{ await navigator.clipboard.writeText(input.value); btn.textContent='Copiado'; }
+  catch(e){ input.select(); document.execCommand('copy'); btn.textContent='Copiado'; }
+}));
+$('authorize').addEventListener('click',async () => {
+  if (window.location.origin + window.location.pathname !== CALLBACK) { message('Ative GitHub Pages e abra esta página pelo endereço HTTPS exato antes de autorizar.'); return; }
+  const appId = $('client-id').value.trim();
+  if (!/^[0-9]+$/.test(appId)) { message('Informe o APP ID numérico do Mercado Libre DevCenter.'); return; }
+  const state = random(32);
+  sessionStorage.setItem('pr_meli_oauth_state', state);
+  const params = new URLSearchParams({response_type:'code', client_id:appId, redirect_uri:CALLBACK, state});
+  if($('pkce').checked) {
+    const verifier=random(64);
+    sessionStorage.setItem('pr_meli_oauth_verifier',verifier);
+    const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier));
+    params.set('code_challenge', base64url(new Uint8Array(hash)));
+    params.set('code_challenge_method','S256');
+  } else { sessionStorage.removeItem('pr_meli_oauth_verifier'); }
+  window.location.assign('https://auth.mercadolibre.com.ar/authorization?' + params.toString());
+});
+const qs=new URLSearchParams(location.search);
+if(qs.has('code') || qs.has('error')) {
+  const code=qs.get('code'), state=qs.get('state'), expected=sessionStorage.getItem('pr_meli_oauth_state');
+  $('return').classList.remove('hidden');
+  if(qs.has('error')) {$('auth-status').textContent='O Mercado Libre não autorizou o acesso. Confira as permissões do aplicativo.';}
+  else if(!state || !expected || state!==expected) {$('auth-status').textContent='Validação de segurança (state) falhou. Recomece o fluxo nesta mesma aba.';}
+  else if(!code) {$('auth-status').textContent='Código de autorização ausente. Reinicie o fluxo.';}
+  else {
+    $('auth-status').textContent='Código de autorização recebido e state validado. Configure os Secrets imediatamente.';
+    $('authcode').value=code;
+    const verifier=sessionStorage.getItem('pr_meli_oauth_verifier');
+    if(verifier){$('verifier').value=verifier;$('verifier-section').classList.remove('hidden');}
+    $('code-fields').classList.remove('hidden');
+    sessionStorage.removeItem('pr_meli_oauth_state');
+    sessionStorage.removeItem('pr_meli_oauth_verifier');
+  }
+  history.replaceState(null,'',location.pathname);
+}
+})();
+</script></body></html>

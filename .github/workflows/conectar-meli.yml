@@ -1,0 +1,54 @@
+name: Conectar Mercado Libre (OAuth seguro)
+on:
+  workflow_dispatch:
+    inputs:
+      replace_existing:
+        description: 'Reconectar e substituir tokens existentes? (Somente se necessário)'
+        type: boolean
+        default: false
+        required: true
+
+concurrency:
+  group: promoradar-data
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  conectar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MELI_CLIENT_ID: ${{ secrets.MELI_CLIENT_ID }}
+      MELI_CLIENT_SECRET: ${{ secrets.MELI_CLIENT_SECRET }}
+      MELI_AUTH_CODE: ${{ secrets.MELI_AUTH_CODE }}
+      MELI_CODE_VERIFIER: ${{ secrets.MELI_CODE_VERIFIER }}
+      DATA_FERNET_KEY: ${{ secrets.DATA_FERNET_KEY }}
+      MELI_REDIRECT_URI: https://wenz-w.github.io/promoradar-argentina/oauth.html
+      MELI_REPLACE_EXISTING: ${{ inputs.replace_existing }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Dependências
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Validar testes
+        run: python -m unittest discover -s tests -v
+      - name: Trocar código OAuth por tokens e cifrar o resultado
+        run: python -m scripts.bootstrap_meli_oauth
+      - name: Salvar apenas tokens criptografados e a configuração
+        shell: bash
+        run: |
+          git config user.name 'PromoRadar Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- data/private/meli_oauth.enc config/settings.json
+          git commit -m 'auth: conectar Mercado Libre com cofre criptografado'
+          git push
+      - name: Confirmação segura
+        run: |
+          echo '## Mercado Libre conectado' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Credenciais criptografadas; fonte habilitada.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Exclua agora MELI_AUTH_CODE e MELI_CODE_VERIFIER dos Secrets (códigos de uso único).' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Execute em seguida o workflow "Coleta de preços AR (6 meses)".' >> "$GITHUB_STEP_SUMMARY"

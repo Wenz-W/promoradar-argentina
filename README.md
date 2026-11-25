@@ -1,5 +1,15 @@
 # PromoRadar Argentina — MVP acadêmico
 
+## Nova integração Mercado Libre — OAuth sem expor segredos
+
+A integração utiliza o callback HTTPS `https://wenz-w.github.io/promoradar-argentina/oauth.html` e o workflow `Conectar Mercado Libre (OAuth seguro)`. **O GitHub Pages é necessário apenas como callback de autorização**; o catálogo web continua secundário.
+
+**Leia [as instruções completas de ativação](docs/OAUTH_MERCADO_LIBRE.md)** e abra [a página de autorização](docs/oauth.html). Cadastre um aplicativo Mercado Libre no DevCenter com o Redirect URI exato e use **GitHub Actions Secrets** para `MELI_CLIENT_ID`, `MELI_CLIENT_SECRET`, `DATA_FERNET_KEY` e o código temporário `MELI_AUTH_CODE` (mais `MELI_CODE_VERIFIER` apenas para PKCE). Não compartilhe tokens no chat nem em commits.
+
+Após o fluxo OAuth concluído, o bootstrap armazena tokens criptografados, ativa o Mercado Libre e desativa SEPA desatualizado. Só então execute `Coleta de preços AR (6 meses)` para validar preços reais.
+
+---
+
 ## Início rápido — operar o grupo de WhatsApp (prioridade atual)
 
 O catálogo web é secundário. **Não é necessário ativar GitHub Pages** para coletar preços ou revisar ofertas.
