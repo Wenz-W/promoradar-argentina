@@ -11,16 +11,11 @@ concurrency:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   coletar:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,18 +56,16 @@ jobs:
             done
             exit 1
           fi
-      - name: Preparar GitHub Pages
+      - name: Disponibilizar relatórios para o grupo
         if: always()
-        uses: actions/configure-pages@v5
-      - name: Empacotar painel estático
-        if: always()
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
-          path: docs
-      - name: Publicar painel na nuvem
-        if: always()
-        id: deployment
-        uses: actions/deploy-pages@v4
+          name: promoradar-relatorios
+          path: |
+            docs/runs.csv
+            docs/offers.csv
+            docs/ofertas.json
+          retention-days: 30
       - name: Sinalizar coleta incompleta
         if: always() && steps.collect.outcome != 'success'
         run: |
