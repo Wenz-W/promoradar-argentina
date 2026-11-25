@@ -1,0 +1,1 @@
+{"error":"SEPA: Dados SEPA desatualizados: 2026-11-15; idade 10 dias (limite 3).","finished_at":"2026-11-25T03:30:02.385373+00:00","observations_count":0,"offers_count":0,"run_id":"501f45f71685470e8a927bf0782475f6","source_status":{"sepa":"failed"},"started_at":"2026-11-25T03:30:02.293679+00:00","status":"failed"}

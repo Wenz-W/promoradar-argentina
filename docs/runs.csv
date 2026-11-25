@@ -1,1 +1,2 @@
 run_id,started_at,status,observations_count,offers_count,error
+501f45f71685470e8a927bf0782475f6,2026-11-25T03:30:02.293679+00:00,failed,0,0,SEPA: Dados SEPA desatualizados: 2026-11-15; idade 10 dias (limite 3).
