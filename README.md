@@ -1,5 +1,21 @@
 # PromoRadar Argentina — MVP acadêmico
 
+## Início rápido — operar o grupo de WhatsApp (prioridade atual)
+
+O catálogo web é secundário. **Não é necessário ativar GitHub Pages** para coletar preços ou revisar ofertas.
+
+1. Em `Settings > Actions > General`, habilite Actions e, em `Workflow permissions`, permita `Read and write permissions` quando disponível. A coleta precisa gravar arquivos de histórico no repositório.
+2. Em `Actions > Coleta de preços AR (6 meses) > Run workflow`, selecione `main` e execute. A execução agendada ocorre quatro vezes por dia, sem computador ligado.
+3. Confira o resultado do workflow e baixe o artefato `promoradar-relatorios` (`runs.csv`, `offers.csv`, `ofertas.json`). Confirme **observações reais** e `source_status`: a fonte SEPA pode estar desatualizada ou indisponível.
+4. A fonte SEPA fornece **preços regionais, não links de compra**; assim, por si só, não permite publicar ofertas comerciais em grupos. Para obter ofertas com link de compra, é necessário habilitar o conector Mercado Libre com OAuth autorizado, ou desenvolver outros conectores autorizados.
+5. Depois de haver histórico suficiente (mínimo de sete dias de preços), use o `offer_id` de `docs/offers.csv` em `Actions > Revisar oferta (aprovação humana)` para aprovar a oferta. Copie a mensagem somente após revalidar o preço, estoque e link no marketplace.
+6. Crie o grupo no aplicativo WhatsApp, configure `Somente administradores` para enviar mensagens e publique manualmente as ofertas aprovadas.
+
+**A coleta em nuvem não foi ativada nem testada até existir uma execução bem-sucedida em Actions.** Nenhuma oferta deve ser anunciada como real sem preço e disponibilidade confirmados. O grupo e sua criação são externos ao GitHub.
+
+---
+
+
 Coletor agendado de preços, auditável por seis meses, com painel **estático** no GitHub Pages, custo de infraestrutura potencialmente zero nas cotas gratuitas. Desenvolvido para apresentar **resultados reais**, nunca para simular quatro/seis meses de observações inexistentes.
 
 ## O que foi implementado
