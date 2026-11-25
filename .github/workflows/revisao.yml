@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Instalar dependências do projeto
@@ -54,7 +54,7 @@ jobs:
             exit 1
           fi
       - name: Disponibilizar fila aprovada
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ofertas-aprovadas
           path: docs/ofertas.json
