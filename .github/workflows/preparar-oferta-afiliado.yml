@@ -1,0 +1,59 @@
+name: Preparar oferta afiliada para WhatsApp
+on:
+  workflow_dispatch:
+    inputs:
+      product_title:
+        description: 'Nome real do produto no Mercado Libre'
+        required: true
+        type: string
+      price_ars:
+        description: 'Preço visto agora (ex.: 24999 ou 24999.90)'
+        required: true
+        type: string
+      affiliate_url:
+        description: 'Seu link de afiliado: https://meli.la/...'
+        required: true
+        type: string
+concurrency:
+  group: promoradar-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Verificar testes do cadastro de afiliados
+        run: python -m unittest discover -s tests -p test_manual_affiliate.py -v
+      - name: Preparar candidato e mensagem
+        env:
+          PRODUCT_TITLE: ${{ inputs.product_title }}
+          PRICE_ARS: ${{ inputs.price_ars }}
+          AFFILIATE_URL: ${{ inputs.affiliate_url }}
+        run: python -m scripts.affiliate_manual prepare
+      - name: Salvar candidato no histórico separado
+        shell: bash
+        run: |
+          git config user.name 'PromoRadar Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- 'data/real/affiliate-candidates-*.jsonl'
+          if ! git diff --cached --quiet; then
+            git commit -m "affiliate: candidato manual para WhatsApp"
+            for i in 1 2 3; do
+              if git push; then exit 0; fi
+              git pull --rebase
+              sleep 3
+            done
+            exit 1
+          fi
+      - name: Entregar mensagem para copiar no WhatsApp
+        uses: actions/upload-artifact@v6
+        with:
+          name: mensagem-whatsapp
+          path: outputs/affiliate/
+          retention-days: 30

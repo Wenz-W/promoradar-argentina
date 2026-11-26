@@ -1,0 +1,59 @@
+name: Registrar publicação manual no WhatsApp
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_id:
+        description: 'ID AF-... do workflow Preparar oferta'
+        required: true
+        type: string
+      confirmed_price_ars:
+        description: 'Preço que você confirmou no anúncio antes de enviar'
+        required: true
+        type: string
+      channel:
+        description: 'Nome do grupo/canal onde a oferta FOI enviada'
+        required: true
+        type: string
+      confirmed_sent:
+        description: 'Eu abri o link, confirmei preço/estoque/destino e enviei a mensagem ao grupo'
+        required: true
+        type: boolean
+        default: false
+concurrency:
+  group: promoradar-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  registrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Testar integridade dos registros
+        run: python -m unittest discover -s tests -p test_manual_affiliate.py -v
+      - name: Registrar confirmação manual
+        env:
+          CANDIDATE_ID: ${{ inputs.candidate_id }}
+          CONFIRMED_PRICE_ARS: ${{ inputs.confirmed_price_ars }}
+          CHANNEL: ${{ inputs.channel }}
+          CONFIRMED_SENT: ${{ inputs.confirmed_sent }}
+        run: python -m scripts.affiliate_manual published
+      - name: Persistir evidência de publicação declarada
+        shell: bash
+        run: |
+          git config user.name 'PromoRadar Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- 'data/real/affiliate-publications-*.jsonl'
+          if ! git diff --cached --quiet; then
+            git commit -m 'affiliate: registrar publicação manual confirmada'
+            for i in 1 2 3; do
+              if git push; then exit 0; fi
+              git pull --rebase
+              sleep 3
+            done
+            exit 1
+          fi
