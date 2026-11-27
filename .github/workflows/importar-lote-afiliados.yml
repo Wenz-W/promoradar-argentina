@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       official_links:
-        description: 'Copiar todos do gerador Mercado Libre: um link POR LINHA, exatamente na ordem das URLs exportadas'
+        description: 'Links do gerador: na mesma ordem, separados por | ou uma URL por linha'
         required: true
         type: string
       confirmed_mapping:
