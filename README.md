@@ -1,27 +1,15 @@
 # PromoRadar Argentina — MVP acadêmico
 
-## Nova integração Mercado Libre — OAuth sem expor segredos
+## Etapa v0.3 — exportação e importação em lote de links de afiliados
 
-A integração utiliza o callback HTTPS `https://wenz-w.github.io/promoradar-argentina/oauth.html` e o workflow `Conectar Mercado Libre (OAuth seguro)`. **O GitHub Pages é necessário apenas como callback de autorização**; o catálogo web continua secundário.
+**Prioridade: grupos WhatsApp.** Adicionamos duas Actions:
 
-**Leia [as instruções completas de ativação](docs/OAUTH_MERCADO_LIBRE.md)** e abra [a página de autorização](docs/oauth.html). Cadastre um aplicativo Mercado Libre no DevCenter com o Redirect URI exato e use **GitHub Actions Secrets** para `MELI_CLIENT_ID`, `MELI_CLIENT_SECRET`, `DATA_FERNET_KEY` e o código temporário `MELI_AUTH_CODE` (mais `MELI_CODE_VERIFIER` apenas para PKCE). Não compartilhe tokens no chat nem em commits.
+- [Exportar lote para gerador oficial de afiliados](.github/workflows/exportar-lote-afiliados.yml): seleciona anúncios de observações reais do Mercado Libre com até 30 horas de idade e ainda sem link da sua etiqueta; entrega lista de URLs em ordem, CSV e ID do lote. Também indica produtos que já têm link.
+- [Importar links oficiais de afiliados (lote)](.github/workflows/importar-lote-afiliados.yml): recebe o `batch_id` e os links copiados do painel oficial na mesma ordem, exige confirmação humana, valida a quantidade e as URLs, e guarda a associação produto → link, sem alterar `ref` ou outros parâmetros.
 
-Após o fluxo OAuth concluído, o bootstrap armazena tokens criptografados, ativa o Mercado Libre e desativa SEPA desatualizado. Só então execute `Coleta de preços AR (6 meses)` para validar preços reais.
+Dois links oficiais fornecidos pelo operador durante o teste foram salvos no banco reutilizável, **sem alegação de preço ou comissão verificada**. Leia [o manual do fluxo em lote](docs/GERADOR_AFILIADOS_EM_LOTE.md).
 
----
-
-## Início rápido — operar o grupo de WhatsApp (prioridade atual)
-
-O catálogo web é secundário. **Não é necessário ativar GitHub Pages** para coletar preços ou revisar ofertas.
-
-1. Em `Settings > Actions > General`, habilite Actions e, em `Workflow permissions`, permita `Read and write permissions` quando disponível. A coleta precisa gravar arquivos de histórico no repositório.
-2. Em `Actions > Coleta de preços AR (6 meses) > Run workflow`, selecione `main` e execute. A execução agendada ocorre quatro vezes por dia, sem computador ligado.
-3. Confira o resultado do workflow e baixe o artefato `promoradar-relatorios` (`runs.csv`, `offers.csv`, `ofertas.json`). Confirme **observações reais** e `source_status`: a fonte SEPA pode estar desatualizada ou indisponível.
-4. A fonte SEPA fornece **preços regionais, não links de compra**; assim, por si só, não permite publicar ofertas comerciais em grupos. Para obter ofertas com link de compra, é necessário habilitar o conector Mercado Libre com OAuth autorizado, ou desenvolver outros conectores autorizados.
-5. Depois de haver histórico suficiente (mínimo de sete dias de preços), use o `offer_id` de `docs/offers.csv` em `Actions > Revisar oferta (aprovação humana)` para aprovar a oferta. Copie a mensagem somente após revalidar o preço, estoque e link no marketplace.
-6. Crie o grupo no aplicativo WhatsApp, configure `Somente administradores` para enviar mensagens e publique manualmente as ofertas aprovadas.
-
-**A coleta em nuvem não foi ativada nem testada até existir uma execução bem-sucedida em Actions.** Nenhuma oferta deve ser anunciada como real sem preço e disponibilidade confirmados. O grupo e sua criação são externos ao GitHub.
+**Limitação atual:** a busca automática depende de uma fonte de coleta realmente autorizada. O Mercado Libre API ainda está desabilitado e a API SEPA falhou por desatualização. Nenhum produto novo será descoberto na nuvem até essa origem ser resolvida. Não há geração automatizada de afiliados por API não documentada.
 
 ---
 

@@ -1,0 +1,53 @@
+name: Importar links oficiais de afiliados (lote)
+on:
+  workflow_dispatch:
+    inputs:
+      batch_id:
+        description: 'ID AB-... gerado no workflow Exportar lote'
+        required: true
+        type: string
+      official_links:
+        description: 'Copiar todos do gerador Mercado Libre: um link POR LINHA, exatamente na ordem das URLs exportadas'
+        required: true
+        type: string
+      confirmed_mapping:
+        description: 'Confirme que verificou a correspondência dos links com os produtos na mesma ordem'
+        required: true
+        type: boolean
+        default: false
+concurrency:
+  group: promoradar-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Executar testes do importador
+        run: python -m unittest discover -s tests -p 'test_affiliate_batch.py' -v
+      - name: Validar lote e salvar links sem reescrever parâmetros
+        env:
+          BATCH_ID: ${{ inputs.batch_id }}
+          OFFICIAL_LINKS: ${{ inputs.official_links }}
+          CONFIRMED_MAPPING: ${{ inputs.confirmed_mapping }}
+        run: python -m scripts.affiliate_batch import
+      - name: Persistir links oficiais e associação por produto
+        run: |
+          git config user.name 'PromoRadar Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- 'data/real/affiliate-links-*.jsonl'
+          if ! git diff --cached --quiet; then
+            git commit -m 'affiliate: importar links oficiais gerados em lote'
+            for i in 1 2 3; do
+              if git push; then exit 0; fi
+              sleep 3
+              git pull --rebase
+            done
+            exit 1
+          fi

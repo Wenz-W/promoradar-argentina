@@ -1,0 +1,57 @@
+name: Exportar lote para gerador oficial de afiliados
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        description: 'Etiqueta do painel de Afiliados do Mercado Libre'
+        required: true
+        type: string
+        default: 'liwe4706506'
+      max_items:
+        description: 'Quantos produtos novos exportar (1 a 50)'
+        required: true
+        type: string
+        default: '20'
+concurrency:
+  group: promoradar-data
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  exportar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Testar exportação e segurança do mapeamento
+        run: python -m unittest discover -s tests -p 'test_affiliate_batch.py' -v
+      - name: Montar lote a partir das observações REAIS recentes
+        env:
+          AFFILIATE_LABEL: ${{ inputs.label }}
+          MAX_ITEMS: ${{ inputs.max_items }}
+        run: python -m scripts.affiliate_batch export
+      - name: Persistir manifesto de lote para importação posterior
+        run: |
+          git config user.name 'PromoRadar Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ -d data/real/affiliate-batches ]; then git add -- data/real/affiliate-batches/; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'affiliate: preparar lote para geração oficial de links'
+            for i in 1 2 3; do
+              if git push; then exit 0; fi
+              sleep 3
+              git pull --rebase
+            done
+            exit 1
+          fi
+      - name: Exportar URLs em ordem e produtos com links existentes
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: lote-gerador-afiliados
+          path: outputs/affiliate-batch/
+          retention-days: 30
+          if-no-files-found: warn
