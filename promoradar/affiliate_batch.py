@@ -193,7 +193,9 @@ def import_batch(*, batch_id: str, links_text: str, data_dir: Path | None = None
         raise AffiliateBatchError('Manifesto de lote inválido.')
     label=doc['label']
     items=doc['products']
-    links=[line.strip() for line in links_text.splitlines() if line.strip()]
+    # GitHub workflow_dispatch pode oferecer campo de uma linha; aceita também links separados por |.
+    chunks = links_text.replace('|', '\n').splitlines()
+    links=[line.strip() for line in chunks if line.strip()]
     if len(links) != len(items):
         raise AffiliateBatchError(f'O gerador retornou {len(links)} links, mas o lote tem {len(items)} produtos. Não gravado.')
     checked=[validate_official_affiliate_link(link,label) for link in links]
